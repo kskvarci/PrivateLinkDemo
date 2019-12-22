@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#NOTE:
+# Make sure to modify params.sh, authenticate the CLI and select the correct subscription before running any of the scripts contained in this repo.
+
 #include parameters file
 source ./params.sh
 
@@ -32,9 +35,9 @@ az network nsg create --resource-group $resourceGroupName --name "dns-nsg"
 az network nsg create --resource-group $resourceGroupName --name "workload-nsg"
 az network nsg create --resource-group $resourceGroupName --name "workload2-nsg"
 
-# Configure a rule on the workload subnets to allow inbound SSH. This is for testing.
-az network nsg rule create --resource-group $resourceGroupName --name "ssh-inbound" --priority 110 --direction "Inbound" --protocol "*" --source-address-prefixes $sourceIP --source-port-ranges "*" --destination-address-prefixes "VirtualNetwork" --destination-port-ranges "22" --access "Allow" --nsg-name "workload-nsg"
-az network nsg rule create --resource-group $resourceGroupName --name "ssh-inbound" --priority 110 --direction "Inbound" --protocol "*" --source-address-prefixes $sourceIP --source-port-ranges "*" --destination-address-prefixes "VirtualNetwork" --destination-port-ranges "22" --access "Allow" --nsg-name "workload2-nsg"
+# Configure a rule on the workload subnets to allow all connectivity from your source IP. This is for testing.
+az network nsg rule create --resource-group $resourceGroupName --name "ssh-inbound" --priority 110 --direction "Inbound" --protocol "*" --source-address-prefixes $sourceIP --source-port-ranges "*" --destination-address-prefixes "VirtualNetwork" --destination-port-ranges "*" --access "Allow" --nsg-name "workload-nsg"
+az network nsg rule create --resource-group $resourceGroupName --name "ssh-inbound" --priority 110 --direction "Inbound" --protocol "*" --source-address-prefixes $sourceIP --source-port-ranges "*" --destination-address-prefixes "VirtualNetwork" --destination-port-ranges "*" --access "Allow" --nsg-name "workload2-nsg"
 
 # assign the NSGs to the appropriate subnets
 az network vnet subnet update --resource-group $resourceGroupName --name "workload-subnet" --vnet-name $spokeVnetName --network-security-group "workload-nsg"

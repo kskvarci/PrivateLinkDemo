@@ -3,6 +3,7 @@
 #include parameters file
 source ./params.sh
 
-# Deploy an Ubuntu VM and install test tools
-az vm create --name "TestClient1" --resource-group $resourceGroupName --authentication-type "ssh" --admin-username $userName --boot-diagnostics-storage "" --location $location --nsg "" --image "Canonical:UbuntuServer:18.04-LTS:latest" --size "Standard_DS2" --ssh-key-value "$sshKey" --subnet "workload-subnet" --vnet-name $spokeVnetName --custom-data configclient.sh
-az vm create --name "TestClient2" --resource-group $resourceGroupName --authentication-type "ssh" --admin-username $userName --boot-diagnostics-storage "" --location $location --nsg "" --image "Canonical:UbuntuServer:18.04-LTS:latest" --size "Standard_DS2" --ssh-key-value "$sshKey" --subnet "workload-subnet" --vnet-name $spoke2VnetName --custom-data configclient.sh
+# Deploy Windows test VMs
+# You will need to log into these VMs and install any test tools required.
+az vm create --name "TestClient1" --resource-group $resourceGroupName --authentication-type "Password" --admin-username $userName  --admin-password $rdpPass --boot-diagnostics-storage "" --location $location --nsg "" --image "MicrosoftWindowsServer:WindowsServer:2019-Datacenter:latest" --size "Standard_DS4" --subnet "workload-subnet" --vnet-name $spokeVnetName
+az vm create --name "TestClient2" --resource-group $resourceGroupName --authentication-type "Password" --admin-username $userName  --admin-password $rdpPass --boot-diagnostics-storage "" --location $location --nsg "" --image "MicrosoftWindowsServer:WindowsServer:2019-Datacenter:latest" --size "Standard_DS4" --subnet "workload-subnet" --vnet-name $spoke2VnetName
