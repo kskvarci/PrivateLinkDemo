@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Example config file. Rename to params.sh.
+
 #_______________________________________________________________________________
 # Top Level
 location="eastus2"
