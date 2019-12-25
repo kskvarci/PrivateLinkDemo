@@ -1,0 +1,50 @@
+#!/bin/bash
+
+#_______________________________________________________________________________
+# Top Level
+location="eastus2"
+resourceGroupName="PrivateLinkDemo2-Rg"
+
+#_______________________________________________________________________________
+# Network
+spokeVnetName="SpokeVnet"
+spoke2VnetName="Spoke2Vnet"
+hubVnetName="HubVnet"
+sourceIP="xxx.xxx.xxx.xxx/32"
+subnetName="privatelink-subnet"
+
+#_______________________________________________________________________________
+# SQL
+sqlServerServerName="your-unique-sql-server-name"
+sqlServerDBName="sampledb"
+sqlServerAdminUname="dbadmin"
+sqlServerAdminPword="your-sql-password"
+
+#_______________________________________________________________________________
+# Storage
+storageAccountName="your-unique-storage-account-name"
+
+#_______________________________________________________________________________
+# Cosmos
+cosmosAccountName="your-unique-cosmos-account-name"
+cosmosDatabaseName="cosmosdb"
+containerName="container1"
+partitionKey="/partitionKey1"
+throughput="400"
+cosmosLocation="North Central US"
+
+#_______________________________________________________________________________
+# Private Link Service
+ilbName="plinkilb"
+ilbFrontEnd="plinkilbfe"
+ilbBackEndPool="plinkilbbep"
+ilbHealthProbe="plinkilbhp"
+ilbOutboundIpName="plinkilboutPublicIP"
+availabilitySetName="plinkserviceas"
+custPrivateLinkServiceName="custom-plinkservice"
+
+#_______________________________________________________________________________
+# VMs
+userName="your-vm-user-name"
+sshKey="your-public-ssh-key"
+rdpPass="your-windows-password"
