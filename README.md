@@ -54,8 +54,8 @@ These are basic VM's. You'll have to deploy test apps like SSMS, etc. to conduct
 2. Try connecting to the SQL server from the internet or another network through the public IP. This shouldnt work. 
 3. Try the same with the storage and Cosmos account using Azure Storage Explorer (You'll have to install this on the test clients)
 4. Try connecting to the resources from the test clients with both with the original resource FQDNs and the custom private zone FQDNs. Both should work due to the CName chains.
-5. Try connecting directly to the private front-end IP of the standard load balancer for the custom Private Link Service from both spokes. You should be able to access it only from Spoke one due to non-transitive routing.
-6. Connect to the custom Private Link Service frome Spoke 2 using the via the private endpoint in Spoke 2. This allows resources in Spoke 2 to reach the custom service without peering through the endpoint.
+5. Try connecting directly to the private front-end IP of the standard load balancer for the custom Private Link Service from both spokes. You should be able to access it only from Spoke 1 due to non-transitive routing.
+6. Connect to the custom Private Link Service frome Spoke 2 via the private endpoint in Spoke 2. This allows resources in Spoke 2 to reach the custom service without peering through the endpoint.
 
 ## Built With
 
