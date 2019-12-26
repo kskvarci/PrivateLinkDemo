@@ -42,6 +42,7 @@ ilbFrontEnd="plinkilbfe"
 ilbBackEndPool="plinkilbbep"
 ilbHealthProbe="plinkilbhp"
 ilbOutboundIpName="plinkilboutPublicIP"
+
 availabilitySetName="plinkserviceas"
 custPrivateLinkServiceName="custom-plinkservice"
 

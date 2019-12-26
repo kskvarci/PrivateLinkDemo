@@ -3,12 +3,10 @@
 #include parameters file
 source ./params.sh
 
-#TODO - add a public IP and rule for outgoing NAT.. Otherwise machines will not bootstrap.
-
-
+#_______________________________________________________________________________
+# Internal ILB
 # Deploy a standard Internal Load Balancer into Spoke 1
-az network lb create --resource-group $resourceGroupName --name $ilbName --sku standard --vnet-name $spokeVnetName --subnet "workload-subnet" --frontend-ip-name $ilbFrontEnd --backend-pool-name $ilbBackEndPool 
-
+az network lb create --resource-group $resourceGroupName --name $ilbName --sku standard --vnet-name $spokeVnetName --subnet "workload-subnet" --frontend-ip-name $ilbFrontEnd --backend-pool-name $ilbBackEndPool
 
 # Create a health probe
 az network lb probe create --resource-group $resourceGroupName --lb-name $ilbName --name $ilbHealthProbe --protocol tcp --port 80
@@ -16,9 +14,15 @@ az network lb probe create --resource-group $resourceGroupName --lb-name $ilbNam
 # Create a load balancer rule
 az network lb rule create --resource-group $resourceGroupName --lb-name $ilbName --name HTTPRule --protocol tcp --frontend-port 80 --backend-port 80 --frontend-ip-name $ilbFrontEnd --backend-pool-name $ilbBackEndPool --probe-name $ilbHealthProbe
 
-# Create NICs for hte backend servers
+# By default, VMs w/out pubilc IP's cannot establish outbound connections to the internet
+# Create public IPs for outbound access so machines can properly bootstrap
 for i in `seq 1 2`; do
-  az network nic create --resource-group $resourceGroupName --name ServiceVMNic$i --vnet-name $spokeVnetName --subnet "workload-subnet" --lb-name $ilbName --lb-address-pools $ilbBackEndPool --network-security-group ""
+  az network public-ip create -g $resourceGroupName -n servicevmPublicIP$i --sku Standard
+done
+
+# Create NICs for the backend servers
+for i in `seq 1 2`; do
+  az network nic create --resource-group $resourceGroupName --name ServiceVMNic$i --vnet-name $spokeVnetName --subnet "workload-subnet" --lb-name $ilbName --lb-address-pools $ilbBackEndPool --network-security-group "" --public-ip-address servicevmPublicIP$i
 done
 
 # Create an availability set
