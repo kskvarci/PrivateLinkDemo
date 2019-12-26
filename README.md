@@ -1,32 +1,42 @@
-# Header 1
+# Private Link Demo
 
+The scripts in this repository will build out an environment in which you can explore Azure's Private Link Service in the context of a hub and spoke network.
+
+There are two options for deploying the environment.
+
+Option 1:
+* Rename params.sh.example to params.sh
+* Update values for variables in params.sh that require unique values. 
+* Deploy all resources by running 00-RunAll.sh
+
+Options 2:
+* Rename params.sh.example to params.sh
+* Update values for variables in params.sh that require unique values. 
+* Run each script in order starting with 01-deployvnets.sh and ending with 07-deploytestclients.sh
+
+
+## Script Descriptions
+
+### 01-deployvnets.sh
+Lorem ipsom
+
+### 02-sqlPrivateLink.sh
 Lorem Ipsum
 
-## Header 2
-
+### 03-StoragePrivateLink.sh
 Lorem Ipsum
 
-## Header 2
-
-### Header 3
-
+### 04-CosmosPrivateLink.sh
 Lorem Ipsum
 
-```
-#!/bin/bash -e
+### 05-deployforwarder.sh
+Lorem Ipsum
 
-# Parameters
-# -----------------------------------------------------------
-# Resource Group & Location
-resourceRootName="kthw"
-location="centralus"
+### 06-ProvateLinkService.sh
+Lorem Ipsum
 
-# Network Info
-vNetCIDR="10.240.0.0/24"
-podCIDRStart="10.200.0.0/24"
-adminUserName="ken"
-SSHPublicKey=''
-```
+### 07-deploytestclients.sh
+Lorem Ipsum
 
 ## Built With
 
@@ -41,8 +51,3 @@ Pull Requests Welcome
 ## Authors
 
 * **Ken Skvarcius**
-
-## Acknowledgments
-
-* [Kubernetes The Hard Way](https://github.com/lostintangent/kubernetes-the-hard-way)
-* Many of the Azure CLI patterns are based on work from [Jonathan Carter's fork](https://github.com/lostintangent/kubernetes-the-hard-way) of Kelsey's original work.
