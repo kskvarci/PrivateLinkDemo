@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#include parameters file
+# include parameters file
 source ./params.sh
 
 #_______________________________________________________________________________
@@ -12,13 +12,19 @@ az sql server create --name $sqlServerServerName --resource-group $resourceGroup
 az sql db create --resource-group $resourceGroupName --server $sqlServerServerName --name $sqlServerDBName --sample-name AdventureWorksLT --edition GeneralPurpose --family Gen4 --capacity 1
 
 #_______________________________________________________________________________
-# create private endpoint tied to the SQL server resource
+# Create a private endpoint in the hub VNet tied to the SQL server resource
 sqlServerID=$(az sql server show --resource-group $resourceGroupName --name $sqlServerServerName --query 'id' -o tsv)
 az network private-endpoint create --name "$sqlServerServerName-plink" --resource-group $resourceGroupName --vnet-name $hubVnetName --subnet $subnetName --private-connection-resource-id $sqlServerID --group-ids sqlServer --connection-name "$sqlServerServerName-plink"
 
 #_______________________________________________________________________________
 # DNS Setup (Optional)
-# Create the zone. This zone name comes from a list of recommended names. The name of this zone matters! 
+# Create the zone.
+# This zone name comes from a list of recommended names. The name of this zone matters! 
+# When the private endpoint is linked to the target resource, the DNS records referencing the target resource are changed.
+# A chained set of CName records are created such that the original resource FQDN is set to reference a privatelink CName
+# which in turn references the actual A record.
+# This allows you to override the privatelink CName using a private zone and split horizon resolution should you choose to do so.
+# If you use a private zone name different thant he recommended name it will not line up w/ the newly inserted CName.
 # See https://docs.microsoft.com/en-us/azure/private-link/private-endpoint-overview#dns-configuration for details.
 az network private-dns zone create --resource-group $resourceGroupName --name  "privatelink.database.windows.net" 
 # link to hub
@@ -27,6 +33,6 @@ az network private-dns link vnet create --resource-group $resourceGroupName --zo
 networkInterfaceId=$(az network private-endpoint show --name "$sqlServerServerName-plink" --resource-group $resourceGroupName --query 'networkInterfaces[0].id' -o tsv)
 # Grab the private IPs
 privateIp=$(az resource show --ids $networkInterfaceId --api-version 2019-04-01 --query 'properties.ipConfigurations[0].properties.privateIPAddress' -o tsv)
-#Create DNS records 
+# Create DNS records 
 az network private-dns record-set a create --name "$sqlServerServerName" --zone-name privatelink.database.windows.net --resource-group $resourceGroupName  
 az network private-dns record-set a add-record --record-set-name "$sqlServerServerName" --zone-name privatelink.database.windows.net --resource-group $resourceGroupName -a $privateIp

@@ -1,22 +1,22 @@
 #!/bin/bash
 
-#NOTE:
+# NOTE:
 # Make sure to modify params.sh, authenticate the CLI and select the correct subscription before running any of the scripts contained in this repo.
 
-#include parameters file
+# include parameters file
 source ./params.sh
 
-# Create a resource group
+# Create a resource group to hold all resources
 az group create --location $location --name $resourceGroupName
 
 #_______________________________________________________________________________
 # Create a Hub VNet
 az network vnet create --resource-group $resourceGroupName --name $hubVnetName --address-prefixes "10.0.0.0/16"
 
-# Create a subnet for a DNS
+# Create a subnet in the hub for the DNS forwarder
 az network vnet subnet create --resource-group $resourceGroupName --name "dns-subnet" --vnet-name $hubVnetName --address-prefixes "10.0.3.0/24"
 
-# Create a subnet for a Private Endpoints
+# Create a subnet in the hub for a Private Endpoints
 az network vnet subnet create --resource-group $resourceGroupName --name $subnetName --vnet-name $hubVnetName --address-prefixes "10.0.4.0/24"
 
 #________________________________________________________________________________
@@ -24,11 +24,11 @@ az network vnet subnet create --resource-group $resourceGroupName --name $subnet
 az network vnet create --resource-group $resourceGroupName --name $spokeVnetName --address-prefixes "10.1.0.0/16"
 az network vnet create --resource-group $resourceGroupName --name $spoke2VnetName --address-prefixes "10.2.0.0/16"
 
-# Create subnets for our test workloads
+# Create a workload subnet in each spoke VNet
 az network vnet subnet create --resource-group $resourceGroupName --name "workload-subnet" --vnet-name $spokeVnetName --address-prefixes "10.1.0.0/24"
 az network vnet subnet create --resource-group $resourceGroupName --name "workload-subnet" --vnet-name $spoke2VnetName --address-prefixes "10.2.0.0/24"
 
-# Create the Private Endpoint Subnets
+# Create a Private Endpoint VNet in the second spoke VNet
 az network vnet subnet create --resource-group $resourceGroupName --name $subnetName --vnet-name $spoke2VnetName --address-prefixes "10.2.2.0/24"
 
 #_________________________________________________________________________________
@@ -37,7 +37,8 @@ az network nsg create --resource-group $resourceGroupName --name "dns-nsg"
 az network nsg create --resource-group $resourceGroupName --name "workload-nsg"
 az network nsg create --resource-group $resourceGroupName --name "workload2-nsg"
 
-# Configure a rule on the workload subnets to allow all connectivity from your source IP. This is for testing.
+# Configure a rule on the workload subnets to allow all connectivity from your source IP.
+# This will allow you to RDP into the test VM's, etc.
 az network nsg rule create --resource-group $resourceGroupName --name "ssh-inbound" --priority 110 --direction "Inbound" --protocol "*" --source-address-prefixes $sourceIP --source-port-ranges "*" --destination-address-prefixes "VirtualNetwork" --destination-port-ranges "*" --access "Allow" --nsg-name "workload-nsg"
 az network nsg rule create --resource-group $resourceGroupName --name "ssh-inbound" --priority 110 --direction "Inbound" --protocol "*" --source-address-prefixes $sourceIP --source-port-ranges "*" --destination-address-prefixes "VirtualNetwork" --destination-port-ranges "*" --access "Allow" --nsg-name "workload2-nsg"
 
@@ -52,10 +53,10 @@ az network vnet peering create --resource-group $resourceGroupName --name hubtos
 az network vnet peering create --resource-group $resourceGroupName --name spoketohub --vnet-name $spokeVnetName --remote-vnet $hubVnetName --allow-vnet-access
 az network vnet peering create --resource-group $resourceGroupName --name spoketohub2 --vnet-name $spoke2VnetName --remote-vnet $hubVnetName --allow-vnet-access
 
-# disable private endpoint network policies on the privatelink subnets
+# Disable private endpoint network policies on the private link subnets
 #_______________________________________________________________________________
-# Network policies like network security groups (NSG) are not supported for private endpoints. In order to deploy a Private Endpoint on a given subnet,
-# an explicit disable setting is required on that subnet. This setting is only applicable for the Private Endpoint. For other resources in the subnet,
+# Network policies like network security groups (NSG) are not supported on subnets containing Private Endpoints. In order to deploy a Private Endpoint on a given subnet,
+# an explicit disable setting is required on that subnet. This setting is only applicable for Private Endpoints. For other resources in the subnet,
 # access is controlled based on Network Security Groups (NSG) security rules definition.
 # When using the portal to create a private endpoint, this setting is automatically disabled as part of the create process. Deployment using other clients requires an additional step to change this setting.
 az network vnet subnet update --name $subnetName --resource-group $resourceGroupName --vnet-name $hubVnetName --disable-private-endpoint-network-policies true

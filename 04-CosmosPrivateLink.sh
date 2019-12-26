@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#include parameters file
+# include parameters file
 source ./params.sh
 
 #_______________________________________________________________________________
@@ -20,7 +20,13 @@ az network private-endpoint create --name "$cosmosAccountName-plink" --resource-
 
 #_______________________________________________________________________________
 # DNS Setup (Optional)
-# Create the zone. This zone name comes from a list of recommended names. The name of this zone matters! 
+# Create the zone.
+# This zone name comes from a list of recommended names. The name of this zone matters! 
+# When the private endpoint is linked to the target resource, the DNS records referencing the target resource are changed.
+# A chained set of CName records are created such that the original resource FQDN is set to reference a privatelink CName
+# which in turn references the actual A record.
+# This allows you to override the privatelink CName using a private zone and split horizon resolution should you choose to do so.
+# If you use a private zone name different thant he recommended name it will not line up w/ the newly inserted CName.
 # See https://docs.microsoft.com/en-us/azure/private-link/private-endpoint-overview#dns-configuration for details.
 az network private-dns zone create --resource-group $resourceGroupName --name  "privatelink.documents.azure.com" 
 # link to hub
@@ -29,6 +35,6 @@ az network private-dns link vnet create --resource-group $resourceGroupName --zo
 networkInterfaceId=$(az network private-endpoint show --name "$cosmosAccountName-plink" --resource-group $resourceGroupName --query 'networkInterfaces[0].id' -o tsv)
 # Grab the private IPs
 privateIp=$(az resource show --ids $networkInterfaceId --api-version 2019-04-01 --query 'properties.ipConfigurations[0].properties.privateIPAddress' -o tsv)
-#Create DNS records 
+# Create DNS records 
 az network private-dns record-set a create --name "$cosmosAccountName" --zone-name privatelink.documents.azure.com --resource-group $resourceGroupName  
 az network private-dns record-set a add-record --record-set-name "$cosmosAccountName" --zone-name privatelink.documents.azure.com --resource-group $resourceGroupName -a $privateIp

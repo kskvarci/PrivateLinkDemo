@@ -1,6 +1,6 @@
 # !/bin/bash
 
-#include parameters file
+# include parameters file
 source ./params.sh
 
 #_______________________________________________________________________________

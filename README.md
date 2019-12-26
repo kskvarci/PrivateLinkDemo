@@ -4,16 +4,19 @@ The scripts in this repository will build out an environment in which you can ex
 
 There are two options for deploying the environment.
 
-Option 1:
-* Rename params.sh.example to params.sh
-* Update values for variables in params.sh that require unique values. 
-* Deploy all resources by running 00-RunAll.sh
-
-Options 2:
+**Options 1** - *recommended*:\
+( Step through each deployment phase )
 * Rename params.sh.example to params.sh
 * Update values for variables in params.sh that require unique values. 
 * Run each script in order starting with 01-deployvnets.sh and ending with 07-deploytestclients.sh
 
+**Option 2:**\
+( Deploy everything in one shot )
+1. Rename params.sh.example to params.sh
+2. Update values for variables in params.sh that require unique values. 
+3. Deploy all resources by running 00-RunAll.sh
+
+The scripts are well commented. Make sure to read through them before running!
 
 ## Script Descriptions
 
