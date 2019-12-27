@@ -76,27 +76,30 @@ These are basic VM's. You'll have to deploy test tools like SSMS, etc. to conduc
 ## A bit more about DNS and Private Link
 DNS resolution is an important aspect of setting up a private endpoint. In particular, when setting up private endpoints to Azure services (storage, SQL, Cosmos, etc.) you need to consider how the pre-existing resource URLs will interact with your private DNS.\
 \
-We'll use Azure SQL as an example here, but the same patterns are applicable to other services. When you deploy an Azure SQL DB, Azure creates a CName record in DNS on your behalf so that you can easily access the server. For example, if you create a database called "mysqldb", a set of records will be created as follows:\
-\
-mysqldb.database.windows.net. 159 IN CNAME   dataslice4.eastus2.database.windows.net.\
-\
+We'll use Azure SQL as an example here, but the same patterns are applicable to other services. When you deploy an Azure SQL DB, Azure creates a CName record in DNS on your behalf so that you can easily access the server. For example, if you create a database called "mysqldb", a set of records will be created as follows:
+```
+mysqldb.database.windows.net. 159 IN CNAME   dataslice4.eastus2.database.windows.net.
+
 dataslice4.eastus2.database.windows.net. 137 IN CNAME
-\
+
 cr4.eastus2-a.control.database.windows.net.
 cr4.eastus2-a.control.database.windows.net. 21002 IN A 52.167.104.0
-
+```
 If you follow the records, you'll see that theres a chain of CNAME records that eventually resolve to an A record that references the IP address of the server. From a clients perspective, this result in multiple DNS queries. The first CNAME record refers the client to the second CNAME, the second CNAME refers the client to the A record (and the IP).\
 \
-When an Azure resource is referenced by a private endpoint, the DNS records for that resource are modified as a result. Azure inserts one additional CNAME into the chain. For example:\
-\
-mysqldb.database.windows.net. 157 IN CNAME   ksktesting.privatelink.database.windows.net.\
-\
-**mysqldb.privatelink.database.windows.net. 157 IN CNAME dataslice4.eastus2.database.windows.net.**\
-\
-dataslice4.eastus2.database.windows.net. 67 IN CNAME\
+When an Azure resource is referenced by a private endpoint, the DNS records for that resource are modified as a result. Azure inserts one additional CNAME into the chain. For example, see the second record in the below set:
+
+```
+mysqldb.database.windows.net. 157 IN CNAME   ksktesting.privatelink.database.windows.net.
+
+mysqldb.privatelink.database.windows.net. 157 IN CNAME dataslice4.eastus2.database.windows.net.
+
+dataslice4.eastus2.database.windows.net. 67 IN CNAME
+
 cr4.eastus2-a.control.database.windows.net.
-cr4.eastus2-a.control.database.windows.net. 20990 IN A 52.167.104.0\
-\
+cr4.eastus2-a.control.database.windows.net. 20990 IN A 52.167.104.0
+```
+
 Under normal circumstances (e.g. if a query is made from the internet) this additional record doesnt impact the end result of the query. Eventually the chain of lookups results in the A record being returned.\
 \
 If however you have registered a private record matching the newly inserted CNAME **mysqldb.privatelink.database.windows.net.** and the query is coming from a resource that can resolve the private record, the private record will be returned and the chain will be broken. This is an example of what is commonly reffered to as [split horizon DNS](https://en.wikipedia.org/wiki/Split-horizon_DNS). It allows you to have external DNS queries resolve differently than those that are issued from your private network.\
