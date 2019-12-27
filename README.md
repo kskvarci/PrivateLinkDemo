@@ -19,9 +19,10 @@ There are two options for deploying the environment:
 
 The scripts are well commented. Make sure to read through them before running!
 
-## Script Descriptions
+## Step by Step
 
-### 01-deployvnets.sh
+### [01-deployvnets.sh](01-deployvnets.sh)
+![alt text](images/1.png "Step 1")
 This script deploys three VNets; One hub and two spokes.\
 \
 Within the hub VNet two subnets are created; A subnet to host a Bind DNS forwarder and a subnet for hosting private endpoints.\
@@ -30,22 +31,26 @@ Within the first spoke VNet a single subnet is created to host workload resource
 \
 Within the second spoke VNet two subnets are created; one for workload resources and one for private endpoints.
 
-### 02-sqlPrivateLink.sh
+### [02-sqlPrivateLink.sh](02-sqlPrivateLink.sh)
+![alt text](images/2.png "Step 2")
 This script deploys an Azure SQL server and a single database with AdventureWorks test data.\
 \
 It then create a [private endpoint](https://docs.microsoft.com/en-us/azure/private-link/private-endpoint-overview) in the hub VNet that can be used to access the database privately.\
 \
 Lastly, a [private zone](https://docs.microsoft.com/en-us/azure/dns/private-dns-overview) is created so that the [private endpoint](https://docs.microsoft.com/en-us/azure/private-link/private-endpoint-overview) can be referenced on the private network via the Bind forwarder.
 
-### 03-StoragePrivateLink.sh
+### [03-StoragePrivateLink.sh](03-StoragePrivateLink.sh)
+![alt text](images/3.png "Step 3")
 This script is almost identical to the above noted script.\
 Instead of deploying a SQL DB this script deploys a storage account with a [private endpoint](https://docs.microsoft.com/en-us/azure/private-link/private-endpoint-overview) in the hub along with a private zone.
 
-### 04-CosmosPrivateLink.sh
+### [04-CosmosPrivateLink](04-CosmosPrivateLink)
+![alt text](images/4.png "Step 4")
 This script is almost identical to the above noted script.\
 Instead of deploying a storage account this script deploys a Cosmos account with a [private endpoint](https://docs.microsoft.com/en-us/azure/private-link/private-endpoint-overview) in the hub along with a private zone.
 
-### 05-deployforwarder.sh
+### [05-deployforwarder.sh](05-deployforwarder.sh)
+![alt text](images/5.png "Step 5")
 This script deploys a Bind forwarder (Ubuntu) into the DNS subnet in the hub. 
 \
 Both spoke VNets are then configured to reference the Bind server for all lookups.\
@@ -53,13 +58,15 @@ Both spoke VNets are then configured to reference the Bind server for all lookup
 In a typical scenario this forwarder would be configured to conditionally forward requests to on-premises resolvers and Azure. In this example we just forward all requests to [Azure's internal resolver address](https://docs.microsoft.com/en-us/azure/virtual-network/what-is-ip-address-168-63-129-16) (168.63.129.16).\
 See [configforwarder.sh](configforwarder.sh) for details.
 
-### 06-PrivateLinkService.sh
+### [06-PrivateLinkService.sh](06-PrivateLinkService.sh)
+![alt text](images/6.png "Step 6")
 This script deploys a custom [Private Link Service](https://docs.microsoft.com/en-us/azure/private-link/private-link-service-overview).\
 The service is configured to reference a standard load balancer that balances traffic between two simple NGINX servers.\
 \
 A [private endpoint](https://docs.microsoft.com/en-us/azure/private-link/private-endpoint-overview) is then created in the second spoke referencing the above noted custom Private Link Service such that resources in the second spoke can access the service through the endpoint.
 
-### 07-deploytestclients.sh
+### [07-deploytestclients.sh](07-deploytestclients.sh)
+![alt text](images/full.png "Step 7")
 This script deploys a Windows Server VM into each spoke's workload subnet. These VMs can be used to test the various Private Link Services and Endpoints that we've deployed.\
 These are basic VMs. You'll have to deploy test tools like SSMS, etc. to conduct whatever tests you'd like to conduct.
 
