@@ -85,14 +85,14 @@ dataslice4.eastus2.database.windows.net. 137 IN CNAME
 cr4.eastus2-a.control.database.windows.net.
 cr4.eastus2-a.control.database.windows.net. 21002 IN A 52.167.104.0
 ```
-If you look closely you'll see that theres a chain of CNAME records that eventually resolve to an A record that references the IP address of the server. From a clients perspective, this result in multiple DNS queries. The first CNAME record refers the client to the second CNAME, the second CNAME refers the client to the A record (and the IP).\
+If you look closely you'll see a chain of CNAME records that eventually resolve to an A record referencing the IP address of the server. From a clients perspective, this results in multiple DNS queries. The first CNAME refers the client to the second CNAME, the second CNAME refers the client to the A record (and the IP).\
 \
-When an Azure resource is referenced by a private endpoint, the DNS records for that resource are modified as a result. Azure inserts one additional CNAME into the chain. For example, see the second record in the below set:
+When an Azure resource is referenced by a private endpoint, the DNS records for that resource are modified as a result. Azure inserts one additional CNAME into the chain. For example, see the second record ** in the below set:
 
 ```
 kensdb.database.windows.net. 157 IN CNAME   kensdb.privatelink.database.windows.net.
 
-kensdb.privatelink.database.windows.net. 157 IN CNAME dataslice4.eastus2.database.windows.net.
+** kensdb.privatelink.database.windows.net. 157 IN CNAME dataslice4.eastus2.database.windows.net.
 
 dataslice4.eastus2.database.windows.net. 67 IN CNAME
 
@@ -104,9 +104,9 @@ Under normal circumstances (e.g. if a query is made from the internet) this addi
 \
 If however you have registered a private record matching the newly inserted CNAME **mysqldb.privatelink.database.windows.net.** and the query is coming from a resource that can resolve the private record, the private record will be returned and the chain will be broken. This is an example of what is commonly reffered to as [split horizon DNS](https://en.wikipedia.org/wiki/Split-horizon_DNS). It allows you to have external DNS queries resolve differently than those that are issued from your private network.\
 \
-The net result in this case is that even when the original resource FQDN is used to look up the resource, the IP of your private endpoint will be returned when the lookup is made on your internal network. From an end-user perspective this simplifies use of the private endpoint.\
+The net result in this case is that even when the original resource FQDN is used to look up the resource, the IP of your private endpoint will be returned when the lookup is made on your internal network. From an end-user's perspective this simplifies use of the private endpoint.\
 \
-You don't have control over what CNAME gets inserted into the chain when the resource is reference by the private endpoint. For this reason, it's important to use the [recommended zone names](https://docs.microsoft.com/en-us/azure/private-link/private-endpoint-overview#dns-configuration) when setting up your private zones for your endpoints so that split horizon DNS works properly.
+You don't have control over what CNAME gets inserted into the chain when the resource is reference by the private endpoint. It is always constructed using a pre-determined naming pattern. For this reason, it's important to use the [recommended zone names](https://docs.microsoft.com/en-us/azure/private-link/private-endpoint-overview#dns-configuration) when setting up your private zones for your endpoints so that split horizon DNS works properly.
 \
 \
 In addition to the above it's important to note that although it's possible to create multiple private endpoints pointing to the same resource ( for example one endpoint in each spoke pointing to the same SQL Server ), the way DNS is handled makes this difficult to recommend.\
@@ -115,6 +115,8 @@ The [documentation](https://docs.microsoft.com/en-us/azure/private-link/private-
 *"Multiple private endpoints can be created using the same private link resource. For a single network using a common DNS server configuration, the recommended practice is to use a single private endpoint for a given private link resource to avoid duplicate entries or conflicts in DNS resolution."*
 
 For this reason I've created a single endpoint in the hub for each service in this demo environment.
+
+This doesnt nessasarily apply for custom Private Link Services as with these you have complete control over DNS resolution.
 
 ## Built With
 
