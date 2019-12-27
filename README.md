@@ -111,7 +111,7 @@ If however you have registered a private record matching the newly inserted CNAM
 \
 The net result in this case is that even when the original resource FQDN is used to look up the resource, the IP of your private endpoint will be returned when the lookup is made on your internal network. From an end-user's perspective this simplifies use of the private endpoint.\
 \
-You don't have control over what CNAME gets inserted into the chain when the resource is reference by the private endpoint. It is always constructed using a pre-determined naming pattern. For this reason, it's important to use the [recommended zone names](https://docs.microsoft.com/en-us/azure/private-link/private-endpoint-overview#dns-configuration) when setting up your private zones for your endpoints so that split horizon DNS works properly.
+You don't have control over what CNAME gets inserted into the chain when the resource is referenced by the private endpoint. It's always constructed using a pre-determined naming pattern. For this reason, it's important to use the [recommended zone names](https://docs.microsoft.com/en-us/azure/private-link/private-endpoint-overview#dns-configuration) when setting up your private zones for your endpoints so that split horizon DNS works properly.
 \
 \
 In addition to the above it's important to note that although it's possible to create multiple private endpoints pointing to the same resource ( for example one endpoint in each spoke pointing to the same SQL Server ), the way DNS is handled makes this difficult to recommend.\
