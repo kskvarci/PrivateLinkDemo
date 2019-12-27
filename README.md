@@ -44,7 +44,7 @@ Lastly, a [private zone](https://docs.microsoft.com/en-us/azure/dns/private-dns-
 This script is almost identical to the above noted script.\
 Instead of deploying a SQL DB this script deploys a storage account with a [private endpoint](https://docs.microsoft.com/en-us/azure/private-link/private-endpoint-overview) in the hub along with a private zone.
 
-### [04-CosmosPrivateLink](04-CosmosPrivateLink.sh)
+### [04-CosmosPrivateLink.sh](04-CosmosPrivateLink.sh)
 ![alt text](images/4.png "Step 4")
 This script is almost identical to the above noted script.\
 Instead of deploying a storage account this script deploys a Cosmos account with a [private endpoint](https://docs.microsoft.com/en-us/azure/private-link/private-endpoint-overview) in the hub along with a private zone.
