@@ -1,12 +1,12 @@
 # Private Link Demo Environment
 
-The scripts in this repository will build out an environment in which you can explore Azure's Private Link Service in the context of a hub and spoke network architecture.
+The scripts in this repository will build out an environment in which you can explore [Azure's Private Link Service](https://docs.microsoft.com/en-us/azure/private-link/) in the context of a [hub and spoke network architecture](https://docs.microsoft.com/en-us/azure/architecture/reference-architectures/hybrid-networking/hub-spoke).
 
 There are two options for deploying the environment:
 
 **Option 1** - *recommended*:\
 ( Step through each deployment phase. )
-* Rename params.sh.example to params.sh
+* Rename [params.sh.example](params.sh.example) to params.sh
 * Update values for variables in params.sh that start with "your-".
 * Run each script in order starting with 01-deployvnets.sh and ending with 07-deploytestclients.sh.
 * Explore resources deployed after each step.
