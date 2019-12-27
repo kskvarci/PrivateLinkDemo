@@ -21,7 +21,7 @@ The scripts are well commented. Make sure to read through them before running!
 
 ## Step by Step
 
-### [01-deployvnets.sh](01-deployvnets.sh)
+### [01-DeployVnets.sh](01-DeployVnets.sh)
 ![alt text](images/1.png "Step 1")
 This script deploys three VNets; One hub and two spokes.\
 \
@@ -31,7 +31,7 @@ Within the first spoke VNet a single subnet is created to host workload resource
 \
 Within the second spoke VNet two subnets are created; one for workload resources and one for private endpoints.
 
-### [02-sqlPrivateLink.sh](02-sqlPrivateLink.sh)
+### [02-SqlPrivateLink.sh](02-SqlPrivateLink.sh)
 ![alt text](images/2.png "Step 2")
 This script deploys an Azure SQL server and a single database with AdventureWorks test data.\
 \
@@ -49,7 +49,7 @@ Instead of deploying a SQL DB this script deploys a storage account with a [priv
 This script is almost identical to the above noted script.\
 Instead of deploying a storage account this script deploys a Cosmos account with a [private endpoint](https://docs.microsoft.com/en-us/azure/private-link/private-endpoint-overview) in the hub along with a private zone.
 
-### [05-deployforwarder.sh](05-deployforwarder.sh)
+### [05-DeployForwarder.sh](05-DeployForwarder.sh)
 ![alt text](images/5.png "Step 5")
 This script deploys a Bind forwarder (Ubuntu) into the DNS subnet in the hub. 
 \
@@ -65,7 +65,7 @@ The service is configured to reference a standard load balancer that balances tr
 \
 A [private endpoint](https://docs.microsoft.com/en-us/azure/private-link/private-endpoint-overview) is then created in the second spoke referencing the above noted custom Private Link Service such that resources in the second spoke can access the service through the endpoint.
 
-### [07-deploytestclients.sh](07-deploytestclients.sh)
+### [07-DeployTestClients.sh](07-DeployTestClients.sh)
 ![alt text](images/full.png "Step 7")
 This script deploys a Windows Server VM into each spoke's workload subnet. These VMs can be used to test the various Private Link Services and Endpoints that we've deployed.\
 These are basic VMs. You'll have to deploy test tools like SSMS, etc. to conduct whatever tests you'd like to conduct.
