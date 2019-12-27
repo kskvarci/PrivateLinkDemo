@@ -85,7 +85,7 @@ dataslice4.eastus2.database.windows.net. 137 IN CNAME
 cr4.eastus2-a.control.database.windows.net.
 cr4.eastus2-a.control.database.windows.net. 21002 IN A 52.167.104.0
 ```
-If you follow the records, you'll see that theres a chain of CNAME records that eventually resolve to an A record that references the IP address of the server. From a clients perspective, this result in multiple DNS queries. The first CNAME record refers the client to the second CNAME, the second CNAME refers the client to the A record (and the IP).\
+If you look closely you'll see that theres a chain of CNAME records that eventually resolve to an A record that references the IP address of the server. From a clients perspective, this result in multiple DNS queries. The first CNAME record refers the client to the second CNAME, the second CNAME refers the client to the A record (and the IP).\
 \
 When an Azure resource is referenced by a private endpoint, the DNS records for that resource are modified as a result. Azure inserts one additional CNAME into the chain. For example, see the second record in the below set:
 
