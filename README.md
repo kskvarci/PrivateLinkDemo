@@ -76,9 +76,9 @@ These are basic VM's. You'll have to deploy test tools like SSMS, etc. to conduc
 ## A bit more about DNS and Private Link
 DNS resolution is an important aspect of setting up a private endpoint. In particular, when setting up private endpoints to Azure services (storage, SQL, Cosmos, etc.) you need to consider how the pre-existing resource URLs will interact with your private DNS.\
 \
-We'll use Azure SQL as an example here, but the same patterns are applicable to other services. When you deploy an Azure SQL DB, Azure creates a CName record in DNS on your behalf so that you can easily access the server. For example, if you create a database called "mysqldb", a set of records will be created as follows:
+We'll use Azure SQL as an example here, but the same patterns are applicable to other services. When you deploy an Azure SQL DB, Azure creates a CName record in DNS on your behalf so that you can easily access the server. For example, if you create a database called "kensdb", a set of records will be created as follows:
 ```
-mysqldb.database.windows.net. 159 IN CNAME   dataslice4.eastus2.database.windows.net.
+kensdb.database.windows.net. 159 IN CNAME   dataslice4.eastus2.database.windows.net.
 
 dataslice4.eastus2.database.windows.net. 137 IN CNAME
 
@@ -90,9 +90,9 @@ If you follow the records, you'll see that theres a chain of CNAME records that 
 When an Azure resource is referenced by a private endpoint, the DNS records for that resource are modified as a result. Azure inserts one additional CNAME into the chain. For example, see the second record in the below set:
 
 ```
-mysqldb.database.windows.net. 157 IN CNAME   ksktesting.privatelink.database.windows.net.
+kensdb.database.windows.net. 157 IN CNAME   kensdb.privatelink.database.windows.net.
 
-mysqldb.privatelink.database.windows.net. 157 IN CNAME dataslice4.eastus2.database.windows.net.
+kensdb.privatelink.database.windows.net. 157 IN CNAME dataslice4.eastus2.database.windows.net.
 
 dataslice4.eastus2.database.windows.net. 67 IN CNAME
 
