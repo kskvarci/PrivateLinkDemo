@@ -85,11 +85,10 @@ DNS resolution is an important aspect of setting up a private endpoint. In parti
 \
 We'll use Azure SQL as an example here, but the same patterns are applicable to other services. When you deploy an Azure SQL DB, Azure creates a CName record in DNS on your behalf so that you can easily access the server. For example, if you create a database called "kensdb", a set of records will be created as follows:
 ```
-kensdb.database.windows.net. 159 IN CNAME   dataslice4.eastus2.database.windows.net.
+kensdb.database.windows.net. 159 IN CNAME dataslice4.eastus2.database.windows.net.
 
-dataslice4.eastus2.database.windows.net. 137 IN CNAME
+dataslice4.eastus2.database.windows.net. 137 IN CNAME cr4.eastus2-a.control.database.windows.net.
 
-cr4.eastus2-a.control.database.windows.net.
 cr4.eastus2-a.control.database.windows.net. 21002 IN A 52.167.104.0
 ```
 If you look closely you'll see a chain of CNAME records that eventually resolve to an A record referencing the IP address of the server. From a clients perspective, this results in multiple DNS queries. The first CNAME refers the client to the second CNAME, the second CNAME refers the client to the A record (and the IP).\
@@ -101,9 +100,8 @@ kensdb.database.windows.net. 157 IN CNAME   kensdb.privatelink.database.windows.
 
 ** kensdb.privatelink.database.windows.net. 157 IN CNAME dataslice4.eastus2.database.windows.net.
 
-dataslice4.eastus2.database.windows.net. 67 IN CNAME
+dataslice4.eastus2.database.windows.net. 67 IN CNAME cr4.eastus2-a.control.database.windows.net.
 
-cr4.eastus2-a.control.database.windows.net.
 cr4.eastus2-a.control.database.windows.net. 20990 IN A 52.167.104.0
 ```
 
