@@ -57,6 +57,7 @@ These are basic VM's. You'll have to deploy test apps like SSMS, etc. to conduct
 5. Take a look at the DNS records for the storage account, SQL Server or Cosmos account using Dig. NSlookup the records ( both the original public record and the private zone records ) from the test clients.
 6. Try connecting directly to the private front-end IP of the standard load balancer for the custom Private Link Service from both spokes. You should be able to access it only from Spoke 1 due to non-transitive routing.
 7. Connect to the custom Private Link Service frome Spoke 2 via the private endpoint in Spoke 2. This allows resources in Spoke 2 to reach the custom service without peering through the endpoint.
+8. Explore the private link service resource. Take a look at the Nat and Access Security options.
 
 ## Built With
 
