@@ -14,7 +14,7 @@ az cosmosdb sql container create -a $cosmosAccountName -g $resourceGroupName -d 
 az cosmosdb update --name $cosmosAccountName --resource-group $resourceGroupName --enable-virtual-network true
 
 #_______________________________________________________________________________
-# create private endpoints in the target subnets tied to the storage server resource
+# create private endpoints in the target subnets tied to Cosmos resource
 cosmosID=$(az cosmosdb show --resource-group $resourceGroupName --name $cosmosAccountName --query 'id' -o tsv)
 az network private-endpoint create --name "$cosmosAccountName-plink" --resource-group $resourceGroupName --vnet-name $hubVnetName --subnet $subnetName --private-connection-resource-id $cosmosID --group-ids Sql --connection-name "$cosmosAccountName-plink"
 

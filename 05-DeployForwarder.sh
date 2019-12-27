@@ -4,8 +4,9 @@
 source ./params.sh
 
 #_______________________________________________________________________________
-# Deploy an Ubuntu VM and install Squid Proxy
+# Deploy an Ubuntu VM and install Bind
 az vm create --name "BindForwarder" --resource-group $resourceGroupName --authentication-type "ssh" --admin-username $userName --boot-diagnostics-storage "" --location $location --nsg "" --image "Canonical:UbuntuServer:18.04-LTS:latest" --size "Standard_DS2" --ssh-key-value "$sshKey" --subnet "dns-subnet" --vnet-name $hubVnetName --custom-data configforwarder.sh
+# Grab the private IP of the server
 interface=$(az vm show --resource-group $resourceGroupName --name "BindForwarder" --query 'networkProfile.networkInterfaces[0].id' -o tsv)
 privateIP=$(az resource show --ids $interface --api-version 2019-04-01 --query 'properties.ipConfigurations[0].properties.privateIPAddress' -o tsv)
 
