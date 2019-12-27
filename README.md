@@ -35,7 +35,7 @@ This script deploys an Azure SQL server and a single database with AdventureWork
 \
 It then create a [private endpoint](https://docs.microsoft.com/en-us/azure/private-link/private-endpoint-overview) in the hub VNet that can be used to access the database privately.\
 \
-Lastly, a [private zone](https://docs.microsoft.com/en-us/azure/dns/private-dns-overview) is created so that the [private endpoint](https://docs.microsoft.com/en-us/azure/private-link/private-endpoint-overview) can be referenced on the private network via the Bind fowarder.
+Lastly, a [private zone](https://docs.microsoft.com/en-us/azure/dns/private-dns-overview) is created so that the [private endpoint](https://docs.microsoft.com/en-us/azure/private-link/private-endpoint-overview) can be referenced on the private network via the Bind forwarder.
 
 ### 03-StoragePrivateLink.sh
 This script is almost identical to the above noted script.\
@@ -50,7 +50,7 @@ This script deploys a Bind forwarder (Ubuntu) into the DNS subnet in the hub.
 \
 Both spoke VNets are then configured to reference the Bind server for all lookups.\
 \
-In a typical scneario this forwarder would be configured to conditionally forward requests to on-premises resolvers and Azure. In this example we just forward all requests to [Azure's internal resolver address](https://docs.microsoft.com/en-us/azure/virtual-network/what-is-ip-address-168-63-129-16) (168.63.129.16).\
+In a typical scenario this forwarder would be configured to conditionally forward requests to on-premises resolvers and Azure. In this example we just forward all requests to [Azure's internal resolver address](https://docs.microsoft.com/en-us/azure/virtual-network/what-is-ip-address-168-63-129-16) (168.63.129.16).\
 See [configforwarder.sh](configforwarder.sh) for details.
 
 ### 06-PrivateLinkService.sh
@@ -60,17 +60,17 @@ The service is configured to reference a standard load balancer that balances tr
 A [private endpoint](https://docs.microsoft.com/en-us/azure/private-link/private-endpoint-overview) is then created in the second spoke referencing the above noted custom Private Link Service such that resources in the second spoke can access the service through the endpoint.
 
 ### 07-deploytestclients.sh
-This script deploys a Windows Server VM into each spoke's workload subnet. These VM's can be used to test the various Private Link Services and Endpoints that we've deployed.\
-These are basic VM's. You'll have to deploy test tools like SSMS, etc. to conduct whatever tests you'd like to conduct.
+This script deploys a Windows Server VM into each spoke's workload subnet. These VMs can be used to test the various Private Link Services and Endpoints that we've deployed.\
+These are basic VMs. You'll have to deploy test tools like SSMS, etc. to conduct whatever tests you'd like to conduct.
 
 ## Some Ideas for Testing
 1. Install [SSMS](https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver15) and [Azure Storage Explorer](https://azure.microsoft.com/en-us/features/storage-explorer/) on the test client VM's in each spoke and connect to the SQL server through the service endpoint in the Hub.
-2. Try connecting to the SQL server from the internet or another network through the public IP. This shouldnt work due to access restrictions configuration.
+2. Try connecting to the SQL server from the internet or another network through the public IP. This shouldn't work due to access restrictions configuration.
 3. Try the same with the storage and Cosmos account using Azure Storage Explorer (You'll have to install this on the test clients)
 4. Try connecting to the resources from the test clients with both with the original resource FQDNs and the custom private zone FQDNs. Both should work due to the CName chains in place.
 5. Take a look at the DNS records for the storage account, SQL Server or Cosmos account using Dig. NSlookup the records ( both the original public record and the private zone records ) from the test clients.
 6. Try connecting directly to the private front-end IP of the standard load balancer for the custom Private Link Service from both spokes. You should be able to access it only from Spoke 1 due to non-transitive routing.
-7. Connect to the custom Private Link Service frome Spoke 2 via the private endpoint in Spoke 2. This allows resources in Spoke 2 to reach the custom service without peering through the endpoint.
+7. Connect to the custom Private Link Service from Spoke 2 via the private endpoint in Spoke 2. This allows resources in Spoke 2 to reach the custom service without peering through the endpoint.
 8. Explore the private link service resource. Take a look at the Nat and Access Security options.
 
 ## A bit more about DNS and Private Link
@@ -100,9 +100,9 @@ cr4.eastus2-a.control.database.windows.net.
 cr4.eastus2-a.control.database.windows.net. 20990 IN A 52.167.104.0
 ```
 
-Under normal circumstances (e.g. if a query is made from the internet) this additional record doesnt impact the end result of the query. Eventually the chain of lookups results in the A record being returned.\
+Under normal circumstances (e.g. if a query is made from the internet) this additional record doesn't impact the end result of the query. Eventually the chain of lookups results in the A record being returned.\
 \
-If however you have registered a private record matching the newly inserted CNAME **mysqldb.privatelink.database.windows.net.** and the query is coming from a resource that can resolve the private record, the private record will be returned and the chain will be broken. This is an example of what is commonly reffered to as [split horizon DNS](https://en.wikipedia.org/wiki/Split-horizon_DNS). It allows you to have external DNS queries resolve differently than those that are issued from your private network.\
+If however you have registered a private record matching the newly inserted CNAME **mysqldb.privatelink.database.windows.net.** and the query is coming from a resource that can resolve the private record, the private record will be returned and the chain will be broken. This is an example of what is commonly referred to as [split horizon DNS](https://en.wikipedia.org/wiki/Split-horizon_DNS). It allows you to have external DNS queries resolve differently than those that are issued from your private network.\
 \
 The net result in this case is that even when the original resource FQDN is used to look up the resource, the IP of your private endpoint will be returned when the lookup is made on your internal network. From an end-user's perspective this simplifies use of the private endpoint.\
 \
@@ -116,7 +116,7 @@ The [documentation](https://docs.microsoft.com/en-us/azure/private-link/private-
 
 For this reason I've created a single endpoint in the hub for each service in this demo environment.
 
-This doesnt nessasarily apply for custom Private Link Services as with these you have complete control over DNS resolution.
+This doesn't necessarily apply for custom Private Link Services as with these you have complete control over DNS resolution.
 
 ## Built With
 
