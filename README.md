@@ -32,7 +32,7 @@ The scripts are well commented. Make sure to read through them before running!\
 \
 Before getting started make sure that you have the Azure CLI installed, that you've authenticated and that you have the subscription you'd like to deploy to selected.\
 \
-This was built in tested on Ubuntu 18.04 (WSL).
+This was built and tested on Ubuntu 18.04 (WSL).
 
 ## Step by Step
 
