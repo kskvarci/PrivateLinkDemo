@@ -17,15 +17,15 @@ There are two options for deploying the environment:
 
 **Option 1** - *recommended*:\
 ( Step through each deployment phase. )
-* Rename [params.sh.example](params.sh.example) to params.sh
-* Update values for variables in params.sh that start with "your-".
-* Run each script in order starting with [01-DeployVnets.sh](01-DeployVnets.sh) and ending with [07-DeployTestClients.sh](07-DeployTestClients.sh).
-* Explore resources deployed after each step.
+1. Rename [params.sh.example](params.sh.example) to params.sh
+2. Update values for variables in params.sh that start with "your-".
+3. Run each script in order starting with [01-DeployVnets.sh](01-DeployVnets.sh) and ending with [07-DeployTestClients.sh](07-DeployTestClients.sh).
+4. Explore resources deployed after each step.
 
 **Option 2:**\
 ( In a hurry? Deploy everything in one shot. )
 1. Rename [params.sh.example](params.sh.example) to params.sh
-* Update values for variables in params.sh that start with "your-".
+2. Update values for variables in params.sh that start with "your-".
 3. Deploy all resources in one shot by running [00-RunAll.sh](00-RunAll.sh)
 
 The scripts are well commented. Make sure to read through them before running!\
