@@ -16,7 +16,7 @@ The scripts in this repository will build out an environment in which you can ex
 There are two options for deploying the environment:
 
 **Option 1** - *recommended*:\
-( Step through each deployment phase. Review resource after each phase of deployment. )
+( Step through each deployment phase. Review resources after each phase of deployment. )
 1. Rename [params.sh.example](params.sh.example) to params.sh
 2. Update values for variables in params.sh that start with "your-".
 3. Run each script in order starting with [01-DeployVnets.sh](01-DeployVnets.sh) and ending with [07-DeployTestClients.sh](07-DeployTestClients.sh).
